@@ -6,7 +6,8 @@ import Time from "./Time.js"
 function App(){
   const [time, setTime] = useState(0);
   const [timerOn, setTimeOn] = useState(false);
-
+  const [wasClicked, setClick] = useState(false);
+  let timeout;
 
   useEffect(() => {
     const unsubscribe = new Subject();
@@ -47,14 +48,23 @@ function App(){
           )}
 
           {(time || timerOn) && (
-           <button onDoubleClick={function doubleClick(){
-             setTimeOn(false);
-           }} 
-           
-           onClick={function(){
-             if(time > 0) {
-               setTimeOn(true);
+           <button onClick={function doubleClick(){
+            if(time > 0) {
+              setTimeOn(true);
+            }
+             if(wasClicked){
+               setClick(false);
+               clearTimeout(timeout);
+               setTimeOn(false);
+               return;
              }
+             else{
+               setClick(true);
+               timeout = setTimeout(() =>{
+                setClick(false);
+               }, 300)
+             }
+             
            }}>
 
              {timerOn ? "Wait" : "Start"}
